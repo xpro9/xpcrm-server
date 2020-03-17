@@ -1,0 +1,50 @@
+version: "3.1"
+services:
+    php:
+      build: ./docker/apache-php
+      container_name: xpcrm-php
+      working_dir: /app
+      volumes:
+       - .:/app
+       - ./docker/apache-php/sites-enabled:/etc/apache2/sites-enabled
+      ports:
+       - 10080:80
+       - 18080:18080
+    
+    redis:
+      image: redis:latest
+      container_name: xpcrm-redis
+
+    laravel-echo-server:
+      image: oanhnn/laravel-echo-server
+      container_name: xpcrm-echo
+      ports:
+       - 16001:16001
+      volumes:
+       - ./crm-experience:/app
+      depends_on:
+       - redis    
+
+
+    # nodejs:
+    #   build: ./docker/nodejs
+    #   container_name: xpcrm-nodejs
+    #   working_dir: /app
+    #   volumes:
+    #     - .:/app
+    #   ports:
+    #    - 10080:80
+    #   environment:
+    #     - MYSQL_ROOT_PASSWORD=my_password
+    #     - MYSQL_DATABASE=my_database
+    #     - MYSQL_USER=my_database
+    #     - MYSQL_PASSWORD=my_password
+    # phpmyadmin:
+    #   image: phpmyadmin/phpmyadmin
+    #   container_name: scrappy-phpmyadmin
+    #   environment:
+    #    - PMA_HOST=scrappy-mysql
+    #   restart: always
+    #   ports:
+    #    - 5968:80
+
